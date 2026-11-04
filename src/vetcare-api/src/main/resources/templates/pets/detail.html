@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hồ Sơ Thú Cưng — VetCare Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container py-5" style="max-width: 800px;">
+    <div class="card border-0 shadow-sm p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold mb-0 text-primary"><i class="fa-solid fa-id-card me-2"></i> Thông Tin Bệnh Nhân</h4>
+            <div>
+                <a th:href="@{/pets/{id}/edit(id=${pet.id})}" class="btn btn-outline-primary btn-sm me-1"><i class="fa-solid fa-pen me-1"></i> Sửa</a>
+                <a th:href="@{/pets}" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-arrow-left me-1"></i> Danh sách</a>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <div class="p-3 bg-light rounded">
+                    <div class="text-muted small">Tên thú cưng</div>
+                    <div class="h4 fw-bold text-dark" th:text="${pet.name}">Milo</div>
+                    <div class="text-secondary" th:text="${pet.species} + ' — ' + ${pet.breed}">Chó - Golden</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 bg-light rounded">
+                    <div class="text-muted small">Chủ nuôi phụ trách</div>
+                    <div class="h5 fw-bold text-dark" th:text="${pet.owner.fullName}">Nguyễn Jane</div>
+                    <div class="text-secondary" th:text="'SĐT: ' + ${pet.owner.phone}">0908123456</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="border rounded p-2 text-center">
+                    <small class="text-muted d-block">Giới tính</small>
+                    <span class="fw-bold" th:text="${pet.gender}">MALE</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="border rounded p-2 text-center">
+                    <small class="text-muted d-block">Cân nặng</small>
+                    <span class="fw-bold" th:text="${pet.weight} + ' kg'">28.5 kg</span>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="border rounded p-2 text-center">
+                    <small class="text-muted d-block">Ngày sinh</small>
+                    <span class="fw-bold" th:text="${pet.dateOfBirth}">2022-03-15</span>
+                </div>
+            </div>
+            <div class="col-12" th:if="${pet.knownAllergies != null && !#strings.isEmpty(pet.knownAllergies)}">
+                <div class="alert alert-danger mb-0">
+                    <h6 class="fw-bold mb-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> Cảnh báo dị ứng:</h6>
+                    <div th:text="${pet.knownAllergies}">Dị ứng Penicillin</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end">
+            <a th:href="@{/appointments/new}" class="btn btn-primary"><i class="fa-solid fa-calendar-plus me-1"></i> Đặt lịch khám cho bé</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+

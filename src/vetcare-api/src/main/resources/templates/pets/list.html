@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách Thú Cưng — VetCare Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="d-flex">
+    <!-- Sidebar -->
+    <div class="p-3 bg-dark text-white" style="width: 260px; min-height: 100vh;">
+        <h4 class="fw-bold text-primary mb-4"><i class="fa-solid fa-paw me-2"></i>VetCare Pro</h4>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item mb-1"><a th:href="@{/dashboard}" class="nav-link text-white-50"><i class="fa-solid fa-chart-pie me-2"></i> Dashboard</a></li>
+            <li class="nav-item mb-1"><a th:href="@{/appointments}" class="nav-link text-white-50"><i class="fa-solid fa-calendar-check me-2"></i> Lịch hẹn</a></li>
+            <li class="nav-item mb-1"><a th:href="@{/pets}" class="nav-link active"><i class="fa-solid fa-dog me-2"></i> Thú cưng</a></li>
+            <li class="nav-item mb-1"><a th:href="@{/medical-records}" class="nav-link text-white-50"><i class="fa-solid fa-notes-medical me-2"></i> Bệnh án (SOAP)</a></li>
+            <li class="nav-item mb-1"><a th:href="@{/vaccinations}" class="nav-link text-white-50"><i class="fa-solid fa-syringe me-2"></i> Tiêm phòng</a></li>
+            <li class="nav-item mb-1"><a th:href="@{/invoices}" class="nav-link text-white-50"><i class="fa-solid fa-file-invoice-dollar me-2"></i> Hóa đơn</a></li>
+        </ul>
+        <hr>
+        <form th:action="@{/logout}" method="post">
+            <button class="btn btn-outline-danger btn-sm w-100"><i class="fa-solid fa-arrow-right-from-bracket me-1"></i> Đăng xuất</button>
+        </form>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-grow-1 p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="fw-bold mb-0">Hồ Sơ Thú Cưng (Bệnh nhân)</h3>
+                <p class="text-muted small">Quản lý hồ sơ bệnh nhân, tiền sử dị ứng và chủ nuôi</p>
+            </div>
+            <a th:href="@{/pets/new}" class="btn btn-primary"><i class="fa-solid fa-plus me-1"></i> Đăng ký thú cưng mới</a>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Tên bé</th>
+                                <th>Loài & Giống</th>
+                                <th>Chủ nuôi</th>
+                                <th>Cân nặng</th>
+                                <th>Cảnh báo dị ứng</th>
+                                <th class="text-end">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="pet : ${pets}">
+                                <td th:text="${pet.id}">1</td>
+                                <td>
+                                    <strong class="text-primary" th:text="${pet.name}">Milo</strong>
+                                    <span class="badge bg-secondary ms-1" th:text="${pet.gender}">MALE</span>
+                                </td>
+                                <td>
+                                    <span th:text="${pet.species}">Chó</span> - <span class="text-muted" th:text="${pet.breed}">Golden</span>
+                                </td>
+                                <td th:text="${pet.owner.fullName}">Nguyễn Jane</td>
+                                <td th:text="${pet.weight} + ' kg'">28.5 kg</td>
+                                <td>
+                                    <span th:if="${pet.knownAllergies != null && !#strings.isEmpty(pet.knownAllergies) && pet.knownAllergies != 'Không ghi nhận'}" 
+                                          class="badge bg-danger" th:text="'⚠️ ' + ${pet.knownAllergies}">Dị ứng Penicillin</span>
+                                    <span th:unless="${pet.knownAllergies != null && !#strings.isEmpty(pet.knownAllergies) && pet.knownAllergies != 'Không ghi nhận'}" 
+                                          class="badge bg-light text-muted">Bình thường</span>
+                                </td>
+                                <td class="text-end">
+                                    <a th:href="@{/pets/{id}(id=${pet.id})}" class="btn btn-sm btn-outline-info me-1"><i class="fa-solid fa-eye"></i></a>
+                                    <a th:href="@{/pets/{id}/edit(id=${pet.id})}" class="btn btn-sm btn-outline-secondary me-1"><i class="fa-solid fa-pen"></i></a>
+                                    <form th:action="@{/pets/{id}/delete(id=${pet.id})}" method="post" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa thú cưng này?');">
+                                        <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+

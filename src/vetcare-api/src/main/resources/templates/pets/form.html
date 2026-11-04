@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng ký Thú Cưng — VetCare Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container py-5" style="max-width: 720px;">
+    <div class="card border-0 shadow-sm p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold mb-0 text-primary"><i class="fa-solid fa-dog me-2"></i> Hồ Sơ Bệnh Nhân (Thú Cưng)</h4>
+            <a th:href="@{/pets}" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-arrow-left me-1"></i> Quay lại</a>
+        </div>
+
+        <form th:action="@{/pets}" th:object="${pet}" method="post">
+            <input type="hidden" th:field="*{id}" />
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Tên thú cưng *</label>
+                    <input type="text" th:field="*{name}" class="form-control" placeholder="Milo, Luna, Max..." required />
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Chủ nuôi *</label>
+                    <select name="ownerId" class="form-select" required>
+                        <option value="">-- Chọn chủ nuôi --</option>
+                        <option th:each="owner : ${owners}" 
+                                th:value="${owner.id}" 
+                                th:text="${owner.fullName} + ' (' + ${owner.phone} + ')'"
+                                th:selected="${pet.owner != null && pet.owner.id == owner.id}"></option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Loài *</label>
+                    <input type="text" th:field="*{species}" class="form-control" placeholder="Chó (Dog), Mèo (Cat)..." required />
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Giống</label>
+                    <input type="text" th:field="*{breed}" class="form-control" placeholder="Golden, Poodle, Ba tư..." />
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Giới tính</label>
+                    <select th:field="*{gender}" class="form-select">
+                        <option value="MALE">Đực (Male)</option>
+                        <option value="FEMALE">Cái (Female)</option>
+                        <option value="UNKNOWN">Không xác định</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Ngày sinh</label>
+                    <input type="date" th:field="*{dateOfBirth}" class="form-control" />
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Cân nặng (kg)</label>
+                    <input type="number" step="0.1" th:field="*{weight}" class="form-control" placeholder="vd: 12.5" />
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label fw-semibold text-danger">Tiền sử dị ứng & Cảnh báo đặc biệt</label>
+                    <textarea th:field="*{knownAllergies}" class="form-control" rows="2" placeholder="Ví dụ: Dị ứng Penicillin, dị ứng hải sản..."></textarea>
+                    <small class="text-muted">Cảnh báo này sẽ hiển thị nổi bật cho Bác sĩ trong mọi cuộc khám.</small>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end mt-4">
+                <a th:href="@{/pets}" class="btn btn-light me-2">Hủy bỏ</a>
+                <button type="submit" class="btn btn-primary px-4"><i class="fa-solid fa-save me-1"></i> Lưu thông tin</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+

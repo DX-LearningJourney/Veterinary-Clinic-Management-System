@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Khám Bệnh SOAP — VetCare Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container py-4" style="max-width: 900px;">
+    <!-- Patient Header Card -->
+    <div class="card border-0 shadow-sm p-3 mb-3 bg-white">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h4 class="fw-bold mb-1 text-primary"><i class="fa-solid fa-stethoscope me-2"></i> Hồ Sơ Thăm Khám (SOAP)</h4>
+                <div class="text-muted small">
+                    Cuộc hẹn: <span class="fw-bold" th:text="${#temporals.format(appointment.scheduledAt, 'dd/MM/yyyy HH:mm')}"></span> | 
+                    Bác sĩ: <span class="fw-bold" th:text="${appointment.veterinarian.fullName}"></span>
+                </div>
+            </div>
+            <a th:href="@{/appointments}" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-arrow-left me-1"></i> Quay lại</a>
+        </div>
+        <hr class="my-2">
+        <div class="row g-2 align-items-center">
+            <div class="col-md-3"><strong>Bệnh nhân:</strong> <span class="text-primary" th:text="${appointment.pet.name}"></span></div>
+            <div class="col-md-3"><strong>Loài:</strong> <span th:text="${appointment.pet.species} + ' - ' + ${appointment.pet.breed}"></span></div>
+            <div class="col-md-3"><strong>Chủ nuôi:</strong> <span th:text="${appointment.petOwner.fullName}"></span></div>
+            <div class="col-md-3 text-end" th:if="${appointment.pet.knownAllergies != null && !#strings.isEmpty(appointment.pet.knownAllergies)}">
+                <span class="badge bg-danger p-2" th:text="'⚠️ ' + ${appointment.pet.knownAllergies}">Dị ứng Penicillin</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SOAP Form -->
+    <form th:action="@{/medical-records}" th:object="${record}" method="post">
+        <input type="hidden" name="appointmentId" th:value="${appointment.id}" />
+
+        <!-- 1. VITAL SIGNS -->
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-white fw-bold text-secondary py-2">
+                <i class="fa-solid fa-heart-pulse text-danger me-1"></i> 1. Chỉ Số Sinh Hiệu (Vital Signs)
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label small fw-semibold">Cân nặng (kg)</label>
+                        <input type="number" step="0.1" th:field="*{weightKg}" class="form-control" placeholder="28.5" required />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-semibold">Thân nhiệt (°C)</label>
+                        <input type="number" step="0.1" th:field="*{temperatureCelsius}" class="form-control" placeholder="38.5" required />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-semibold">Nhịp tim (bpm)</label>
+                        <input type="number" th:field="*{heartRateBpm}" class="form-control" placeholder="95" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-semibold">Nhịp thở (/phút)</label>
+                        <input type="number" th:field="*{respiratoryRate}" class="form-control" placeholder="24" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. S - SUBJECTIVE -->
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-white fw-bold text-secondary py-2">
+                <i class="fa-solid fa-user-pen text-primary me-1"></i> 2. S — Triệu Chứng Chủ Quan (Subjective)
+            </div>
+            <div class="card-body">
+                <textarea th:field="*{subjective}" class="form-control" rows="2" placeholder="Ghi nhận phản ánh từ chủ nuôi: triệu chứng ban đầu, thời gian phát bệnh, thói quen ăn uống gần đây..." required></textarea>
+            </div>
+        </div>
+
+        <!-- 3. O - OBJECTIVE -->
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-white fw-bold text-secondary py-2">
+                <i class="fa-solid fa-eye text-primary me-1"></i> 3. O — Thăm Khám Khách Quan (Objective)
+            </div>
+            <div class="card-body">
+                <textarea th:field="*{objective}" class="form-control" rows="3" placeholder="Kết quả khám lâm sàng: niêm mạc, lông da, hạch ngoại biên, nghe tim phổi, sờ nắn ổ bụng..." required></textarea>
+            </div>
+        </div>
+
+        <!-- 4. A - ASSESSMENT & DIAGNOSIS -->
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-white fw-bold text-secondary py-2">
+                <i class="fa-solid fa-clipboard-check text-success me-1"></i> 4. A — Đánh Giá & Chẩn Đoán (Assessment)
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold">Nhận định lâm sàng chung</label>
+                    <textarea th:field="*{assessment}" class="form-control" rows="2" placeholder="Nhận định đánh giá tổng quát tình trạng bệnh lý..." required></textarea>
+                </div>
+                <div class="row g-2 p-2 bg-light rounded border">
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold">Tên bệnh chẩn đoán</label>
+                        <input type="text" name="diagnosisName" class="form-control" placeholder="Viêm kết mạc mắt phải cấp, Viêm da dị ứng..." required />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-semibold">Mã ICD-10 (nếu có)</label>
+                        <input type="text" name="icdCode" class="form-control" placeholder="H10.9" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-semibold">Mức độ nghiêm trọng</label>
+                        <select name="severity" class="form-select">
+                            <option value="MILD">Nhẹ (Mild)</option>
+                            <option value="MODERATE" selected>Trung bình (Moderate)</option>
+                            <option value="SEVERE">Nặng (Severe)</option>
+                            <option value="CRITICAL">Nguy kịch (Critical)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. P - PLAN -->
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-white fw-bold text-secondary py-2">
+                <i class="fa-solid fa-file-medical text-primary me-1"></i> 5. P — Kế Hoạch Điều Trị (Plan)
+            </div>
+            <div class="card-body">
+                <textarea th:field="*{plan}" class="form-control" rows="3" placeholder="Hướng điều trị: kê đơn thuốc, chế độ dinh dưỡng, xét nghiệm cần làm, dặn dò kiêng cữ và hẹn tái khám..." required></textarea>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end mb-5">
+            <a th:href="@{/appointments}" class="btn btn-light me-2">Hủy bỏ</a>
+            <button type="submit" class="btn btn-primary px-4 py-2 fw-semibold">
+                <i class="fa-solid fa-check me-1"></i> Hoàn tất & Lưu Bệnh Án
+            </button>
+        </div>
+    </form>
+</div>
+</body>
+</html>
+

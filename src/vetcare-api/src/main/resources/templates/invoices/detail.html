@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi Tiết Hóa Đơn — VetCare Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container py-4" style="max-width: 860px;">
+    <div class="card border-0 shadow-sm p-4 bg-white mb-4">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+            <div>
+                <h4 class="fw-bold text-primary mb-1"><i class="fa-solid fa-file-invoice-dollar me-2"></i> HÓA ĐƠN DỊCH VỤ THÚ Y</h4>
+                <div class="text-muted small">Mã số: <span class="fw-bold" th:text="'INV-' + ${invoice.id}"></span> | Ngày lập: <span th:text="${#temporals.format(invoice.issuedAt, 'dd/MM/yyyy HH:mm')}"></span></div>
+            </div>
+            <div>
+                <span class="badge fs-6 p-2" th:classappend="${invoice.paymentStatus.name() == 'PAID' ? 'bg-success' : 'bg-danger'}" th:text="${invoice.paymentStatus}">UNPAID</span>
+                <a th:href="@{/invoices}" class="btn btn-outline-secondary btn-sm ms-2"><i class="fa-solid fa-arrow-left"></i> Quay lại</a>
+            </div>
+        </div>
+
+        <!-- Customer & Pet Info -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <div class="p-3 bg-light rounded">
+                    <small class="text-muted d-block text-uppercase fw-semibold">Thông tin khách hàng</small>
+                    <div class="fw-bold text-dark fs-5" th:text="${invoice.appointment.petOwner.fullName}">Jane</div>
+                    <div class="text-secondary small" th:text="'SĐT: ' + ${invoice.appointment.petOwner.phone}">0908123456</div>
+                    <div class="text-secondary small" th:text="'Địa chỉ: ' + ${invoice.appointment.petOwner.address}">Quận 3, TP.HCM</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 bg-light rounded">
+                    <small class="text-muted d-block text-uppercase fw-semibold">Bệnh nhân (Thú cưng)</small>
+                    <div class="fw-bold text-primary fs-5" th:text="${invoice.appointment.pet.name}">Milo</div>
+                    <div class="text-secondary small" th:text="${invoice.appointment.pet.species} + ' - ' + ${invoice.appointment.pet.breed}">Chó Golden</div>
+                    <div class="text-secondary small">Bác sĩ khám: <span class="fw-semibold" th:text="${invoice.appointment.veterinarian.fullName}">BS. Minh</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Line items table -->
+        <table class="table table-bordered mb-4">
+            <thead class="table-light">
+                <tr>
+                    <th>STT</th>
+                    <th>Diễn giải dịch vụ / Thuốc</th>
+                    <th class="text-center">Số lượng</th>
+                    <th class="text-end">Đơn giá</th>
+                    <th class="text-end">Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item, stat : ${invoice.items}">
+                    <td th:text="${stat.count}">1</td>
+                    <td class="fw-semibold" th:text="${item.description}">Khám lâm sàng</td>
+                    <td class="text-center" th:text="${item.quantity}">1</td>
+                    <td class="text-end" th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">150,000 đ</td>
+                    <td class="text-end fw-bold" th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' đ'">150,000 đ</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" class="text-end fw-bold">Tổng thanh toán:</td>
+                    <td class="text-end fw-bold text-primary fs-5" th:text="${#numbers.formatDecimal(invoice.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'">480,000 đ</td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="text-end text-muted">Đã thanh toán:</td>
+                    <td class="text-end text-success fw-bold" th:text="${#numbers.formatDecimal(invoice.amountPaid, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <!-- Payment action form if UNPAID -->
+        <div th:if="${invoice.paymentStatus.name() != 'PAID'}" class="p-3 bg-light rounded border border-warning">
+            <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-credit-card me-2"></i> Xác Nhận Thu Tiền / Thanh Toán</h5>
+            <form th:action="@{/invoices/{id}/pay(id=${invoice.id})}" method="post">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label small fw-semibold">Phương thức thanh toán</label>
+                        <select name="paymentMethod" class="form-select" required>
+                            <option value="CASH">Tiền mặt (Cash)</option>
+                            <option value="BANK_TRANSFER">Chuyển khoản ngân hàng (QR)</option>
+                            <option value="CARD">Thẻ ngân hàng / POS</option>
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label small fw-semibold">Số tiền thực thu (VND)</label>
+                        <input type="number" step="1000" name="amountPaid" class="form-control" th:value="${invoice.totalAmount}" required />
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-success w-100 py-2 fw-semibold">
+                            <i class="fa-solid fa-check me-1"></i> Xác nhận thu tiền
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div th:if="${invoice.paymentStatus.name() == 'PAID'}" class="alert alert-success mt-2 mb-0 text-center">
+            <i class="fa-solid fa-circle-check fs-4 d-block mb-1"></i>
+            <strong>HÓA ĐƠN ĐÃ ĐƯỢC THANH TOÁN ĐẦY ĐỦ</strong>
+            <div class="small text-muted" th:text="'Phương thức: ' + ${invoice.paymentMethod} + ' | Thời gian: ' + ${#temporals.format(invoice.paidAt, 'dd/MM/yyyy HH:mm:ss')}"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+

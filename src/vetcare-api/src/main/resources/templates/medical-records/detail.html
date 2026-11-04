@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi Tiết Bệnh Án — VetCare Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container py-4" style="max-width: 860px;">
+    <div class="card border-0 shadow-sm p-4 bg-white mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h4 class="fw-bold text-primary mb-1"><i class="fa-solid fa-notes-medical me-2"></i> Hồ Sơ Bệnh Án Điện Tử</h4>
+                <div class="text-muted small">
+                    Mã hồ sơ: <span class="fw-bold" th:text="'MR-' + ${record.id}"></span> | 
+                    Ngày khám: <span class="fw-bold" th:text="${#temporals.format(record.visitDate, 'dd/MM/yyyy HH:mm')}"></span>
+                </div>
+            </div>
+            <a th:href="@{/medical-records}" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-arrow-left me-1"></i> Quay lại</a>
+        </div>
+
+        <!-- Patient & Vet Info -->
+        <div class="row g-2 p-3 bg-light rounded mb-3">
+            <div class="col-md-4">
+                <small class="text-muted d-block">Bệnh nhân (Thú cưng)</small>
+                <strong class="text-primary" th:text="${record.appointment.pet.name}">Milo</strong>
+                <span class="text-muted small" th:text="' (' + ${record.appointment.pet.species} + ')'"></span>
+            </div>
+            <div class="col-md-4">
+                <small class="text-muted d-block">Chủ sở hữu</small>
+                <strong th:text="${record.appointment.petOwner.fullName}">Jane</strong>
+            </div>
+            <div class="col-md-4">
+                <small class="text-muted d-block">Bác sĩ khám</small>
+                <strong th:text="${record.appointment.veterinarian.fullName}">BS. Minh</strong>
+            </div>
+        </div>
+
+        <!-- Vital signs -->
+        <div class="row g-2 text-center mb-4">
+            <div class="col">
+                <div class="border rounded p-2">
+                    <small class="text-muted d-block">Cân nặng</small>
+                    <span class="fw-bold text-dark" th:text="${record.weightKg} + ' kg'">28.5 kg</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="border rounded p-2">
+                    <small class="text-muted d-block">Thân nhiệt</small>
+                    <span class="fw-bold text-dark" th:text="${record.temperatureCelsius} + ' °C'">38.6 °C</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="border rounded p-2">
+                    <small class="text-muted d-block">Nhịp tim</small>
+                    <span class="fw-bold text-dark" th:text="${record.heartRateBpm} + ' bpm'">95 bpm</span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="border rounded p-2">
+                    <small class="text-muted d-block">Nhịp thở</small>
+                    <span class="fw-bold text-dark" th:text="${record.respiratoryRate} + ' /phút'">24 /phút</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SOAP Details -->
+        <div class="mb-3">
+            <h6 class="fw-bold text-secondary border-bottom pb-1"><i class="fa-solid fa-user-pen text-primary me-1"></i> Triệu chứng chủ quan (Subjective)</h6>
+            <p class="text-dark" th:text="${record.subjective}">Chủ nuôi phản ánh...</p>
+        </div>
+
+        <div class="mb-3">
+            <h6 class="fw-bold text-secondary border-bottom pb-1"><i class="fa-solid fa-eye text-primary me-1"></i> Thăm khám khách quan (Objective)</h6>
+            <p class="text-dark" th:text="${record.objective}">Khám lâm sàng ghi nhận...</p>
+        </div>
+
+        <div class="mb-3">
+            <h6 class="fw-bold text-secondary border-bottom pb-1"><i class="fa-solid fa-clipboard-check text-success me-1"></i> Đánh giá & Chẩn đoán (Assessment)</h6>
+            <p class="text-dark fw-semibold" th:text="${record.assessment}">Viêm kết mạc...</p>
+        </div>
+
+        <div class="mb-3">
+            <h6 class="fw-bold text-secondary border-bottom pb-1"><i class="fa-solid fa-file-medical text-primary me-1"></i> Kế hoạch điều trị & Dặn dò (Plan)</h6>
+            <p class="text-dark" th:text="${record.plan}">Kê đơn nhỏ mắt...</p>
+        </div>
+
+        <div class="d-flex justify-content-end mt-4">
+            <form th:action="@{/invoices/generate}" method="post" class="d-inline">
+                <input type="hidden" name="appointmentId" th:value="${record.appointment.id}"/>
+                <button class="btn btn-success"><i class="fa-solid fa-receipt me-1"></i> Xuất Hóa Đơn Thanh Toán</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
