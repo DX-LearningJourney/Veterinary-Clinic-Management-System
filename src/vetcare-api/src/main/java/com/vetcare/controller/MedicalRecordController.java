@@ -4,18 +4,22 @@ import com.vetcare.model.Appointment;
 import com.vetcare.model.MedicalRecord;
 import com.vetcare.service.AppointmentService;
 import com.vetcare.service.MedicalRecordService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/medical-records")
-@RequiredArgsConstructor
 public class MedicalRecordController {
 
     private final MedicalRecordService medicalRecordService;
     private final AppointmentService appointmentService;
+
+    public MedicalRecordController(MedicalRecordService medicalRecordService,
+                                   AppointmentService appointmentService) {
+        this.medicalRecordService = medicalRecordService;
+        this.appointmentService = appointmentService;
+    }
 
     @GetMapping
     public String listRecords(Model model) {
@@ -51,4 +55,3 @@ public class MedicalRecordController {
         return "medical-records/detail";
     }
 }
-

@@ -2,15 +2,10 @@ package com.vetcare.model;
 
 import com.vetcare.model.enums.ItemType;
 import jakarta.persistence.*;
-import lombok.*;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "invoice_items")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class InvoiceItem {
 
     @Id
@@ -29,7 +24,6 @@ public class InvoiceItem {
     private ItemType itemType;
 
     @Column(nullable = false)
-    @Builder.Default
     private Integer quantity = 1;
 
     @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
@@ -37,5 +31,27 @@ public class InvoiceItem {
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal subtotal;
-}
 
+    public InvoiceItem() {}
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public Invoice getInvoice() { return invoice; }
+    public void setInvoice(Invoice invoice) { this.invoice = invoice; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public ItemType getItemType() { return itemType; }
+    public void setItemType(ItemType itemType) { this.itemType = itemType; }
+
+    public Integer getQuantity() { return quantity; }
+    public void setQuantity(Integer quantity) { this.quantity = quantity; }
+
+    public BigDecimal getUnitPrice() { return unitPrice; }
+    public void setUnitPrice(BigDecimal unitPrice) { this.unitPrice = unitPrice; }
+
+    public BigDecimal getSubtotal() { return subtotal; }
+    public void setSubtotal(BigDecimal subtotal) { this.subtotal = subtotal; }
+}

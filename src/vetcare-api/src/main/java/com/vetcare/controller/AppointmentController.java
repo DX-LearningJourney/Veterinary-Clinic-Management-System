@@ -5,7 +5,6 @@ import com.vetcare.model.enums.AppointmentStatus;
 import com.vetcare.repository.VeterinarianRepository;
 import com.vetcare.service.AppointmentService;
 import com.vetcare.service.PetService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,12 +14,19 @@ import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/appointments")
-@RequiredArgsConstructor
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
     private final PetService petService;
     private final VeterinarianRepository veterinarianRepository;
+
+    public AppointmentController(AppointmentService appointmentService,
+                                 PetService petService,
+                                 VeterinarianRepository veterinarianRepository) {
+        this.appointmentService = appointmentService;
+        this.petService = petService;
+        this.veterinarianRepository = veterinarianRepository;
+    }
 
     @GetMapping
     public String listAppointments(Model model) {
@@ -51,4 +57,3 @@ public class AppointmentController {
         return "redirect:/appointments";
     }
 }
-

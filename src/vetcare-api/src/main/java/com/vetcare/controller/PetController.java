@@ -2,17 +2,19 @@ package com.vetcare.controller;
 
 import com.vetcare.model.Pet;
 import com.vetcare.service.PetService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/pets")
-@RequiredArgsConstructor
 public class PetController {
 
     private final PetService petService;
+
+    public PetController(PetService petService) {
+        this.petService = petService;
+    }
 
     @GetMapping
     public String listPets(Model model) {
@@ -56,4 +58,3 @@ public class PetController {
         return "redirect:/pets";
     }
 }
-

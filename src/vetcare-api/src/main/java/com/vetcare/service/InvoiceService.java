@@ -8,7 +8,6 @@ import com.vetcare.model.enums.ItemType;
 import com.vetcare.model.enums.PaymentStatus;
 import com.vetcare.repository.AppointmentRepository;
 import com.vetcare.repository.InvoiceRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +17,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
     private final AppointmentRepository appointmentRepository;
+
+    public InvoiceService(InvoiceRepository invoiceRepository,
+                          AppointmentRepository appointmentRepository) {
+        this.invoiceRepository = invoiceRepository;
+        this.appointmentRepository = appointmentRepository;
+    }
 
     @Transactional(readOnly = true)
     public List<Invoice> findAll() {
@@ -46,24 +50,22 @@ public class InvoiceService {
         BigDecimal fee = (consultationFee != null && consultationFee.compareTo(BigDecimal.ZERO) > 0)
                 ? consultationFee : new BigDecimal("150000.00");
 
-        Invoice invoice = Invoice.builder()
-                .appointment(apt)
-                .issuedAt(LocalDateTime.now())
-                .subtotal(fee)
-                .tax(BigDecimal.ZERO)
-                .totalAmount(fee)
-                .amountPaid(BigDecimal.ZERO)
-                .paymentStatus(PaymentStatus.UNPAID)
-                .build();
+        Invoice invoice = new Invoice();
+        invoice.setAppointment(apt);
+        invoice.setIssuedAt(LocalDateTime.now());
+        invoice.setSubtotal(fee);
+        invoice.setTax(BigDecimal.ZERO);
+        invoice.setTotalAmount(fee);
+        invoice.setAmountPaid(BigDecimal.ZERO);
+        invoice.setPaymentStatus(PaymentStatus.UNPAID);
 
-        InvoiceItem item = InvoiceItem.builder()
-                .invoice(invoice)
-                .description("Khám lâm sàng thú y: " + apt.getReasonForVisit())
-                .itemType(ItemType.SERVICE)
-                .quantity(1)
-                .unitPrice(fee)
-                .subtotal(fee)
-                .build();
+        InvoiceItem item = new InvoiceItem();
+        item.setInvoice(invoice);
+        item.setDescription("Khám lâm sàng thú y: " + apt.getReasonForVisit());
+        item.setItemType(ItemType.SERVICE);
+        item.setQuantity(1);
+        item.setUnitPrice(fee);
+        item.setSubtotal(fee);
 
         invoice.addItem(item);
         return invoiceRepository.save(invoice);
@@ -91,4 +93,3 @@ public class InvoiceService {
         return invoiceRepository.save(invoice);
     }
 }
-

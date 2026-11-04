@@ -3,15 +3,10 @@ package com.vetcare.model;
 import com.vetcare.model.enums.LeaveStatus;
 import com.vetcare.model.enums.LeaveType;
 import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "vet_leaves")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class VetLeave {
 
     @Id
@@ -37,11 +32,35 @@ public class VetLeave {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    @Builder.Default
     private LeaveStatus status = LeaveStatus.PENDING;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "approved_by")
     private User approvedBy;
-}
 
+    public VetLeave() {}
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public Veterinarian getVeterinarian() { return veterinarian; }
+    public void setVeterinarian(Veterinarian veterinarian) { this.veterinarian = veterinarian; }
+
+    public LeaveType getLeaveType() { return leaveType; }
+    public void setLeaveType(LeaveType leaveType) { this.leaveType = leaveType; }
+
+    public LocalDate getStartDate() { return startDate; }
+    public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
+
+    public LocalDate getEndDate() { return endDate; }
+    public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
+
+    public String getReason() { return reason; }
+    public void setReason(String reason) { this.reason = reason; }
+
+    public LeaveStatus getStatus() { return status; }
+    public void setStatus(LeaveStatus status) { this.status = status; }
+
+    public User getApprovedBy() { return approvedBy; }
+    public void setApprovedBy(User approvedBy) { this.approvedBy = approvedBy; }
+}

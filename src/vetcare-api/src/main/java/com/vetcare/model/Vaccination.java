@@ -1,15 +1,10 @@
 package com.vetcare.model;
 
 import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "vaccinations")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Vaccination {
 
     @Id
@@ -41,7 +36,34 @@ public class Vaccination {
     private String notes;
 
     @Column(name = "reminder_sent", nullable = false)
-    @Builder.Default
     private Boolean reminderSent = false;
-}
 
+    public Vaccination() {}
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public Pet getPet() { return pet; }
+    public void setPet(Pet pet) { this.pet = pet; }
+
+    public Vaccine getVaccine() { return vaccine; }
+    public void setVaccine(Vaccine vaccine) { this.vaccine = vaccine; }
+
+    public Veterinarian getVeterinarian() { return veterinarian; }
+    public void setVeterinarian(Veterinarian veterinarian) { this.veterinarian = veterinarian; }
+
+    public LocalDate getAdministeredDate() { return administeredDate; }
+    public void setAdministeredDate(LocalDate administeredDate) { this.administeredDate = administeredDate; }
+
+    public LocalDate getNextDueDate() { return nextDueDate; }
+    public void setNextDueDate(LocalDate nextDueDate) { this.nextDueDate = nextDueDate; }
+
+    public String getBatchNumber() { return batchNumber; }
+    public void setBatchNumber(String batchNumber) { this.batchNumber = batchNumber; }
+
+    public String getNotes() { return notes; }
+    public void setNotes(String notes) { this.notes = notes; }
+
+    public Boolean getReminderSent() { return reminderSent; }
+    public void setReminderSent(Boolean reminderSent) { this.reminderSent = reminderSent; }
+}

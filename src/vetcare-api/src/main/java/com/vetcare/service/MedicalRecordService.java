@@ -7,7 +7,6 @@ import com.vetcare.model.enums.AppointmentStatus;
 import com.vetcare.repository.AppointmentRepository;
 import com.vetcare.repository.DiagnosisRepository;
 import com.vetcare.repository.MedicalRecordRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,12 +15,19 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class MedicalRecordService {
 
     private final MedicalRecordRepository medicalRecordRepository;
     private final AppointmentRepository appointmentRepository;
     private final DiagnosisRepository diagnosisRepository;
+
+    public MedicalRecordService(MedicalRecordRepository medicalRecordRepository,
+                                AppointmentRepository appointmentRepository,
+                                DiagnosisRepository diagnosisRepository) {
+        this.medicalRecordRepository = medicalRecordRepository;
+        this.appointmentRepository = appointmentRepository;
+        this.diagnosisRepository = diagnosisRepository;
+    }
 
     @Transactional(readOnly = true)
     public List<MedicalRecord> findAll() {
@@ -51,13 +57,12 @@ public class MedicalRecordService {
         MedicalRecord saved = medicalRecordRepository.save(record);
 
         if (diagnosisName != null && !diagnosisName.trim().isEmpty()) {
-            Diagnosis diag = Diagnosis.builder()
-                    .medicalRecord(saved)
-                    .diagnosisName(diagnosisName)
-                    .icdCode(icdCode)
-                    .severity(severity != null ? severity : "MODERATE")
-                    .isPrimary(true)
-                    .build();
+            Diagnosis diag = new Diagnosis();
+            diag.setMedicalRecord(saved);
+            diag.setDiagnosisName(diagnosisName);
+            diag.setIcdCode(icdCode);
+            diag.setSeverity(severity != null ? severity : "MODERATE");
+            diag.setIsPrimary(true);
             diagnosisRepository.save(diag);
         }
 
@@ -67,4 +72,3 @@ public class MedicalRecordService {
         return saved;
     }
 }
-

@@ -4,7 +4,6 @@ import com.vetcare.model.Vaccination;
 import com.vetcare.repository.VeterinarianRepository;
 import com.vetcare.service.PetService;
 import com.vetcare.service.VaccinationService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,12 +13,19 @@ import java.time.LocalDate;
 
 @Controller
 @RequestMapping("/vaccinations")
-@RequiredArgsConstructor
 public class VaccinationController {
 
     private final VaccinationService vaccinationService;
     private final PetService petService;
     private final VeterinarianRepository veterinarianRepository;
+
+    public VaccinationController(VaccinationService vaccinationService,
+                                 PetService petService,
+                                 VeterinarianRepository veterinarianRepository) {
+        this.vaccinationService = vaccinationService;
+        this.petService = petService;
+        this.veterinarianRepository = veterinarianRepository;
+    }
 
     @GetMapping
     public String listVaccinations(Model model) {
@@ -46,4 +52,3 @@ public class VaccinationController {
         return "redirect:/vaccinations";
     }
 }
-

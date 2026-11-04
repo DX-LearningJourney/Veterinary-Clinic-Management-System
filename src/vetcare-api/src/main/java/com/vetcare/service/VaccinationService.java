@@ -8,7 +8,6 @@ import com.vetcare.repository.PetRepository;
 import com.vetcare.repository.VaccinationRepository;
 import com.vetcare.repository.VaccineRepository;
 import com.vetcare.repository.VeterinarianRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,13 +15,22 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class VaccinationService {
 
     private final VaccinationRepository vaccinationRepository;
     private final VaccineRepository vaccineRepository;
     private final PetRepository petRepository;
     private final VeterinarianRepository veterinarianRepository;
+
+    public VaccinationService(VaccinationRepository vaccinationRepository,
+                              VaccineRepository vaccineRepository,
+                              PetRepository petRepository,
+                              VeterinarianRepository veterinarianRepository) {
+        this.vaccinationRepository = vaccinationRepository;
+        this.vaccineRepository = vaccineRepository;
+        this.petRepository = petRepository;
+        this.veterinarianRepository = veterinarianRepository;
+    }
 
     @Transactional(readOnly = true)
     public List<Vaccination> findAll() {
@@ -47,18 +55,16 @@ public class VaccinationService {
         LocalDate nextDueDate = (vaccine.getIntervalDays() != null)
                 ? date.plusDays(vaccine.getIntervalDays()) : date.plusYears(1);
 
-        Vaccination vaccination = Vaccination.builder()
-                .pet(pet)
-                .vaccine(vaccine)
-                .veterinarian(vet)
-                .administeredDate(date)
-                .nextDueDate(nextDueDate)
-                .batchNumber(batchNumber != null ? batchNumber : "BATCH-" + System.currentTimeMillis() % 10000)
-                .notes(notes)
-                .reminderSent(false)
-                .build();
+        Vaccination vaccination = new Vaccination();
+        vaccination.setPet(pet);
+        vaccination.setVaccine(vaccine);
+        vaccination.setVeterinarian(vet);
+        vaccination.setAdministeredDate(date);
+        vaccination.setNextDueDate(nextDueDate);
+        vaccination.setBatchNumber(batchNumber != null ? batchNumber : "BATCH-" + System.currentTimeMillis() % 10000);
+        vaccination.setNotes(notes);
+        vaccination.setReminderSent(false);
 
         return vaccinationRepository.save(vaccination);
     }
 }
-

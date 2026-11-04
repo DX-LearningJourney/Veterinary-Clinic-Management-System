@@ -50,33 +50,33 @@ INSERT INTO `roles` (`id`, `name`, `description`) VALUES
 -- ------------------------------------------------------------------------------
 INSERT INTO `users` (`id`, `username`, `email`, `password_hash`, `is_active`) VALUES
 (1, 'admin', 'admin@vetcare.clinic', '$2a$10$7Q2V8p7O6Z3Jm1Q5u7m8ue0L5x/9K8w2r6o8m4c2p0v6k8q2r6o8m', TRUE),
-(2, 'dr_minh', 'minh.tran@vetcare.clinic', '$2a$10$7Q2V8p7O6Z3Jm1Q5u7m8ue0L5x/9K8w2r6o8m4c2p0v6k8q2r6o8m', TRUE),
+(2, 'dr_vinh', 'vinh.duong@vetcare.clinic', '$2a$10$7Q2V8p7O6Z3Jm1Q5u7m8ue0L5x/9K8w2r6o8m4c2p0v6k8q2r6o8m', TRUE),
 (3, 'dr_linh', 'linh.le@vetcare.clinic', '$2a$10$7Q2V8p7O6Z3Jm1Q5u7m8ue0L5x/9K8w2r6o8m4c2p0v6k8q2r6o8m', TRUE),
-(4, 'recep_hoa', 'hoa.pham@vetcare.clinic', '$2a$10$7Q2V8p7O6Z3Jm1Q5u7m8ue0L5x/9K8w2r6o8m4c2p0v6k8q2r6o8m', TRUE),
-(5, 'owner_jane', 'jane.nguyen@gmail.com', '$2a$10$7Q2V8p7O6Z3Jm1Q5u7m8ue0L5x/9K8w2r6o8m4c2p0v6k8q2r6o8m', TRUE),
+(4, 'recep_anh', 'anh.pham@vetcare.clinic', '$2a$10$7Q2V8p7O6Z3Jm1Q5u7m8ue0L5x/9K8w2r6o8m4c2p0v6k8q2r6o8m', TRUE),
+(5, 'owner_kiet', 'kiet.truong@gmail.com', '$2a$10$7Q2V8p7O6Z3Jm1Q5u7m8ue0L5x/9K8w2r6o8m4c2p0v6k8q2r6o8m', TRUE),
 (6, 'owner_david', 'david.tran@gmail.com', '$2a$10$7Q2V8p7O6Z3Jm1Q5u7m8ue0L5x/9K8w2r6o8m4c2p0v6k8q2r6o8m', TRUE);
 
 -- Map User Roles
 INSERT INTO `user_roles` (`user_id`, `role_id`) VALUES
 (1, 1), -- Admin
-(2, 2), -- Dr. Minh (Vet)
+(2, 2), -- Dr. Vinh (Vet)
 (3, 2), -- Dr. Linh (Vet)
-(4, 3), -- Hoa (Receptionist)
-(5, 4), -- Jane (Pet Owner)
+(4, 3), -- Anh (Receptionist)
+(5, 4), -- Kiet (Pet Owner)
 (6, 4); -- David (Pet Owner)
 
 -- ------------------------------------------------------------------------------
 -- 3. PROFILES
 -- ------------------------------------------------------------------------------
 INSERT INTO `veterinarians` (`id`, `user_id`, `full_name`, `specialization`, `license_number`, `is_available`) VALUES
-(1, 2, 'BS. Trần Văn Minh', 'Nội khoa & Thú nhỏ (Canine & Feline Internal Medicine)', 'VET-HCM-0192', TRUE),
+(1, 2, 'BS. Dương Quốc Vinh', 'Nội khoa & Thú nhỏ (Canine & Feline Internal Medicine)', 'VET-HCM-0192', TRUE),
 (2, 3, 'BS. Lê Thị Khánh Linh', 'Phẫu thuật ngoại khoa & Da liễu (Surgery & Dermatology)', 'VET-HCM-0245', TRUE);
 
 INSERT INTO `receptionists` (`id`, `user_id`, `full_name`, `employee_code`) VALUES
-(1, 4, 'Phạm Quỳnh Hoa', 'EMP-REC-001');
+(1, 4, 'Phạm Nguyên Anh', 'EMP-REC-001');
 
 INSERT INTO `pet_owners` (`id`, `user_id`, `full_name`, `phone`, `address`) VALUES
-(1, 5, 'Nguyễn Thị Ngọc Jane', '0908123456', '123 Nguyễn Thị Minh Khai, P.6, Quận 3, TP.HCM'),
+(1, 5, 'Trương Tuấn Kiệt', '0908123456', '123 Nguyễn Thị Minh Khai, P.6, Quận 3, TP.HCM'),
 (2, 6, 'Trần Quốc David', '0919876543', '45 Lê Duẩn, P. Bến Nghé, Quận 1, TP.HCM'),
 (3, 1, 'Admin Quản Trị', '0903000999', 'Hệ thống VetCare Pro');
 

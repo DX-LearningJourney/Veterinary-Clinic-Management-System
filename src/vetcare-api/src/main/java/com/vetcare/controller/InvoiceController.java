@@ -3,7 +3,6 @@ package com.vetcare.controller;
 import com.vetcare.model.Invoice;
 import com.vetcare.service.AppointmentService;
 import com.vetcare.service.InvoiceService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +11,15 @@ import java.math.BigDecimal;
 
 @Controller
 @RequestMapping("/invoices")
-@RequiredArgsConstructor
 public class InvoiceController {
 
     private final InvoiceService invoiceService;
     private final AppointmentService appointmentService;
+
+    public InvoiceController(InvoiceService invoiceService, AppointmentService appointmentService) {
+        this.invoiceService = invoiceService;
+        this.appointmentService = appointmentService;
+    }
 
     @GetMapping
     public String listInvoices(Model model) {
@@ -47,4 +50,3 @@ public class InvoiceController {
         return "redirect:/invoices/" + id;
     }
 }
-

@@ -129,8 +129,9 @@ These inefficiencies result in poor patient experience, staff overload, and subo
 | Language | Java 17+ |
 | Framework | Spring Boot 3.x |
 | ORM | Spring Data JPA / Hibernate |
-| Database | MySQL 8.x |
-| Security | Spring Security + JWT |
+| Database | **Aiven Cloud MySQL 8.x** (Managed Cloud Database) |
+| Configuration | Dotenv (`.env` file) for secure credentials |
+| Security | Spring Security (Role-based Authentication) |
 | Build Tool | Maven |
 
 ### Frontend / Prototype
@@ -156,41 +157,33 @@ These inefficiencies result in poor patient experience, staff overload, and subo
 RAD_Final/
 │
 ├── README.md                         # This file — project overview
+├── rubric.md                         # Standardized grading rubric table
 ├── .agent/
 │   └── workflow/
-│       ├── 01_requirements.md        # Requirements identification & specification
-│       ├── 02_use_cases.md           # Use case specifications (5–7 detailed UCs)
-│       ├── 03_uml_diagrams.md        # UML diagram descriptions & PlantUML code
-│       ├── 04_database_design.md     # Relational schema & data dictionary
-│       ├── 05_ui_design.md           # UI wireframe descriptions & nav flow
-│       └── 06_demo_script.md         # Java demo script & sample data
+│       ├── 00_gap_analysis.md        # Rubric compliance & milestone plan
+│       ├── 01_requirements.md        # Requirements identification & specification (FR-01 to FR-40)
+│       ├── 01b_extended_functions.md # Extended CRUD modules (FR-41 to FR-57: Module I, J, K)
+│       ├── 02_use_cases.md           # Use case specifications (7 detailed UCs + traceability matrix)
+│       └── 03_uml_diagrams.md        # 8 Mermaid UML diagrams (Class, ERD, 3 Sequence, Activity, State)
 │
 ├── docs/
-│   ├── report/                       # Final report (Word/PDF)
-│   ├── uml/                          # Exported UML diagrams (PNG/SVG)
-│   ├── wireframes/                   # Exported Figma screens
-│   └── database/                     # SQL schema files
-│
-├── src/                              # Java source code (Spring Boot project)
-│   ├── main/
-│   │   ├── java/com/vetcare/
-│   │   │   ├── controller/
-│   │   │   ├── service/
-│   │   │   ├── repository/
-│   │   │   ├── model/
-│   │   │   ├── dto/
-│   │   │   └── VetCareApplication.java
-│   │   └── resources/
-│   │       ├── application.properties
-│   │       └── templates/            # Thymeleaf HTML templates
-│   └── test/
+│   ├── database/
+│   │   ├── 04_database_design.md     # Relational schema & complete 23-table Data Dictionary
+│   │   └── schema.sql                # Complete MySQL DDL initialization script
+│   └── uml/                          # Exported diagram assets
 │
 ├── figma/
-│   └── figma-export-links.md         # Figma prototype links & notes
+│   └── figma-prompt.md               # Master AI prompt & UI/UX spec for all 28 prototype screens
 │
-└── demo/
-    ├── sample-data.sql               # Sample data for demo
-    └── demo-script.md                # Step-by-step live demo guide
+├── demo/
+│   └── sample-data.sql               # Realistic Vietnamese demo dataset (users, pets, records, bills)
+│
+└── src/
+    └── vetcare-api/                  # Complete Java Spring Boot application (Maven project)
+        ├── pom.xml
+        └── src/main/
+            ├── java/com/vetcare/     # Controllers, Services, Repositories, JPA Models, Security
+            └── resources/            # application.properties & 14 Thymeleaf Bootstrap 5 templates
 ```
 
 ---
@@ -235,8 +228,12 @@ RAD_Final/
 | `notifications` | Reminder and alert queue |
 | `roles` | Role definitions |
 | `user_roles` | Many-to-many user↔role mapping |
+| `vet_working_hours` | Vet weekly working shifts & slot durations (Module I) |
+| `vet_leaves` | Vet leave requests & approval records (Module I) |
+| `service_price_history` | Audit trail for service price updates (Module J) |
+| `stock_transactions` | Inventory stock-in, dispensing & adjustment records (Module K) |
 
-> Full schema with primary keys, foreign keys, data types, and constraints is in `.agent/workflow/04_database_design.md`
+> Full schema with primary keys, foreign keys, data types, constraints, and data dictionary is in `docs/database/04_database_design.md` and `docs/database/schema.sql`
 
 ---
 
@@ -263,7 +260,25 @@ RAD_Final/
 
 ---
 
-## 11. Team Members
+## 11. Database & Cloud Deployment (Aiven Cloud MySQL)
+
+The system is configured to connect to **Aiven Cloud MySQL**, eliminating local server dependency and ensuring high availability for live presentations.
+
+- **Cloud Provider:** [Aiven Cloud MySQL](https://aiven.io/)
+- **Configuration:** Credentials are securely managed via `.env` file (loaded by `io.github.cdimascio:dotenv-java`)
+- **Initialization Scripts:**
+  - DDL Schema: `docs/database/schema.sql` (23 tables)
+  - Demo Dataset: `demo/sample-data.sql` (realistic Vietnamese data)
+
+```bash
+# Setup environment:
+cp src/vetcare-api/.env.example src/vetcare-api/.env
+# Edit .env with your Aiven service credentials (DB_URL, DB_USERNAME, DB_PASSWORD)
+```
+
+---
+
+## 12. Team Members
 
 | # | Full Name | Student ID | Main Responsibilities | Contribution |
 |---|-----------|------------|----------------------|-------------|

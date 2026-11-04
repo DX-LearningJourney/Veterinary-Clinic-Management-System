@@ -1,16 +1,11 @@
 package com.vetcare.model;
 
 import jakarta.persistence.*;
-import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "service_price_history")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class ServicePriceHistory {
 
     @Id
@@ -32,7 +27,25 @@ public class ServicePriceHistory {
     private User changedBy;
 
     @Column(name = "changed_at", nullable = false)
-    @Builder.Default
     private LocalDateTime changedAt = LocalDateTime.now();
-}
 
+    public ServicePriceHistory() {}
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public Service getService() { return service; }
+    public void setService(Service service) { this.service = service; }
+
+    public BigDecimal getOldPrice() { return oldPrice; }
+    public void setOldPrice(BigDecimal oldPrice) { this.oldPrice = oldPrice; }
+
+    public BigDecimal getNewPrice() { return newPrice; }
+    public void setNewPrice(BigDecimal newPrice) { this.newPrice = newPrice; }
+
+    public User getChangedBy() { return changedBy; }
+    public void setChangedBy(User changedBy) { this.changedBy = changedBy; }
+
+    public LocalDateTime getChangedAt() { return changedAt; }
+    public void setChangedAt(LocalDateTime changedAt) { this.changedAt = changedAt; }
+}

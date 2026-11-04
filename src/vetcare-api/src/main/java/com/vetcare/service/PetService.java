@@ -4,7 +4,6 @@ import com.vetcare.model.Pet;
 import com.vetcare.model.PetOwner;
 import com.vetcare.repository.PetOwnerRepository;
 import com.vetcare.repository.PetRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,11 +11,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class PetService {
 
     private final PetRepository petRepository;
     private final PetOwnerRepository petOwnerRepository;
+
+    public PetService(PetRepository petRepository, PetOwnerRepository petOwnerRepository) {
+        this.petRepository = petRepository;
+        this.petOwnerRepository = petOwnerRepository;
+    }
 
     @Transactional(readOnly = true)
     public List<Pet> findAll() {
@@ -53,4 +56,3 @@ public class PetService {
         return petOwnerRepository.findAll();
     }
 }
-
